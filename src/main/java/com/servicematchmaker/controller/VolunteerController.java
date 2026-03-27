@@ -16,13 +16,11 @@ public class VolunteerController {
     @Autowired
     private VolunteerRepository volunteerRepository;
 
-    // GET all volunteers
     @GetMapping
     public List<Volunteer> getAllVolunteers() {
         return volunteerRepository.findAll();
     }
 
-    // GET volunteer by ID
     @GetMapping("/{id}")
     public ResponseEntity<Volunteer> getVolunteerById(@PathVariable Long id) {
         return volunteerRepository.findById(id)
@@ -30,16 +28,13 @@ public class VolunteerController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST create volunteer
     @PostMapping
     public Volunteer createVolunteer(@RequestBody Volunteer volunteer) {
         return volunteerRepository.save(volunteer);
     }
 
-    // PUT update volunteer
     @PutMapping("/{id}")
-    public ResponseEntity<Volunteer> updateVolunteer(@PathVariable Long id,
-                                                     @RequestBody Volunteer volunteerDetails) {
+    public ResponseEntity<Volunteer> updateVolunteer(@PathVariable Long id, @RequestBody Volunteer volunteerDetails) {
         return volunteerRepository.findById(id)
                 .map(volunteer -> {
                     volunteer.setName(volunteerDetails.getName());
@@ -50,7 +45,6 @@ public class VolunteerController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE volunteer
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVolunteer(@PathVariable Long id) {
         return volunteerRepository.findById(id)

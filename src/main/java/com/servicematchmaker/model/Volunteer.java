@@ -18,15 +18,18 @@ public class Volunteer {
     @Column(name = "hours_logged")
     private double hoursLogged;
 
-    public Volunteer() {}
+    private String email;
+
+    private String password;
+
+    public Volunteer() {
+    }
 
     public Volunteer(String name, String skills, double hoursLogged) {
         this.name = name;
         this.skills = skills;
         this.hoursLogged = hoursLogged;
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -58,5 +61,21 @@ public class Volunteer {
 
     public void setHoursLogged(double hoursLogged) {
         this.hoursLogged = hoursLogged;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

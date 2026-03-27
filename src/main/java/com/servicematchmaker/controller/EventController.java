@@ -16,13 +16,11 @@ public class EventController {
     @Autowired
     private EventRepository eventRepository;
 
-    // GET all events
     @GetMapping
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 
-    // GET event by ID
     @GetMapping("/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable Long id) {
         return eventRepository.findById(id)
@@ -30,28 +28,29 @@ public class EventController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST create event
     @PostMapping
     public Event createEvent(@RequestBody Event event) {
+        if (event.getStatus() == null || event.getStatus().isEmpty()) {
+            event.setStatus("UPCOMING");
+        }
         return eventRepository.save(event);
     }
 
-    // PUT update event
     @PutMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable Long id,
-                                             @RequestBody Event eventDetails) {
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event eventDetails) {
         return eventRepository.findById(id)
                 .map(event -> {
                     event.setTitle(eventDetails.getTitle());
                     event.setRequiredSkill(eventDetails.getRequiredSkill());
                     event.setRequiredVolunteers(eventDetails.getRequiredVolunteers());
                     event.setCurrentVolunteers(eventDetails.getCurrentVolunteers());
+                    event.setDuration(eventDetails.getDuration());
+                    event.setStatus(eventDetails.getStatus());
                     return ResponseEntity.ok(eventRepository.save(event));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE event
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         return eventRepository.findById(id)

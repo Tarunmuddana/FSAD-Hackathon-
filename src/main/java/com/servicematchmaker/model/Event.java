@@ -22,16 +22,34 @@ public class Event {
     @Column(name = "current_volunteers")
     private int currentVolunteers;
 
-    public Event() {}
+    @Column(name = "duration_hours")
+    private double duration = 0.0;
 
-    public Event(String title, String requiredSkill, int requiredVolunteers, int currentVolunteers) {
+    @Column(name = "status")
+    private String status = "UPCOMING"; // UPCOMING or COMPLETED
+
+    public Event() {
+    }
+
+    public Event(String title, String requiredSkill, int requiredVolunteers, int currentVolunteers, double duration,
+            String status) {
         this.title = title;
         this.requiredSkill = requiredSkill;
         this.requiredVolunteers = requiredVolunteers;
         this.currentVolunteers = currentVolunteers;
+        this.duration = duration;
+        this.status = status;
     }
 
-    // Getters and Setters
+    // Urgency Calculator: automatically exposed in JSON response as "criticalNeed":
+    // true/false
+    @Transient
+    public boolean isCriticalNeed() {
+        if (requiredVolunteers == 0 || "COMPLETED".equals(status)) {
+            return false;
+        }
+        return ((double) currentVolunteers / requiredVolunteers) <= 0.5;
+    }
 
     public Long getId() {
         return id;
@@ -71,5 +89,21 @@ public class Event {
 
     public void setCurrentVolunteers(int currentVolunteers) {
         this.currentVolunteers = currentVolunteers;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
