@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getMyEvents } from '../services/api'
 import './Pages.css'
 
 export default function MyEvents({ user }) {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!user) return
@@ -61,7 +63,12 @@ export default function MyEvents({ user }) {
                       </div>
                       {event.description && <p className="my-event-desc">{event.description}</p>}
                     </div>
-                    <div className="my-event-badge upcoming">Upcoming</div>
+                    <div className="my-event-actions">
+                      <button className="btn-event-chat" onClick={() => navigate('/chat')} title="Open group chat">
+                        💬 Chat
+                      </button>
+                      <div className="my-event-badge upcoming">Upcoming</div>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -1,30 +1,27 @@
 import { useState, useEffect } from 'react'
-import { getMatchesForVolunteer, updateVolunteer, getVolunteer } from '../services/api'
+import { getMatchesForVolunteer, getVolunteer } from '../services/api'
 import ScoreRing from '../components/ScoreRing'
 import SkillBadge from '../components/SkillBadge'
-import Toast from '../components/Toast'
+import SettingsModal from '../components/SettingsModal'
 import './Pages.css'
 
 export default function Dashboard({ user, onUpdateUser, onNotify }) {
   const [matches, setMatches] = useState([])
   const [loading, setLoading] = useState(true)
-  const [editing, setEditing] = useState(false)
-  const [editForm, setEditForm] = useState({ name: '', skills: '' })
-  const [saving, setSaving] = useState(false)
-  const [toast, setToast] = useState(null)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     if (!user) return
-    setEditForm({ name: user.name, skills: user.skills })
     getMatchesForVolunteer(user.id)
       .then(data => { setMatches(data); setLoading(false) })
       .catch(() => setLoading(false))
   }, [user])
 
-  const showToast = (msg, type = 'success') => {
-    setToast({ message: msg, type })
-    setTimeout(() => setToast(null), 3500)
-  }
+  // Refresh user data from backend (picks up hoursLogged changes etc)
+  useEffect(() => {
+    if (!user) return
+    getVolunteer(user.id).then(onUpdateUser).catch(() => {})
+  }, [])
 
   if (!user) {
     return (
@@ -33,36 +30,6 @@ export default function Dashboard({ user, onUpdateUser, onNotify }) {
       </div>
     )
   }
-
-  const handleSaveProfile = async () => {
-    setSaving(true)
-    try {
-      const updated = await updateVolunteer(user.id, {
-        ...user,
-        name: editForm.name,
-        skills: editForm.skills
-      })
-      onUpdateUser(updated)
-      setEditing(false)
-      showToast('Profile updated successfully!')
-      onNotify?.('Your profile was updated.', 'info')
-    } catch (err) {
-      showToast(err.message || 'Failed to save profile', 'error')
-    }
-    setSaving(false)
-  }
-
-  // Refresh user data from backend (picks up hoursLogged changes)
-  const refreshProfile = async () => {
-    try {
-      const fresh = await getVolunteer(user.id)
-      onUpdateUser(fresh)
-    } catch { /* silent */ }
-  }
-
-  useEffect(() => {
-    refreshProfile()
-  }, [])
 
   const skills = (user.skills || '').split(',').map(s => s.trim()).filter(Boolean)
   const topMatches = matches.filter(m => m.compatibilityScore >= 80)
@@ -82,33 +49,23 @@ export default function Dashboard({ user, onUpdateUser, onNotify }) {
         <div className="profile-top">
           <div className="profile-avatar">{user.name.charAt(0).toUpperCase()}</div>
           <div className="profile-info">
-            {editing ? (
-              <div className="edit-fields">
-                <input className="form-input edit-input" value={editForm.name}
-                  onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} placeholder="Your name" />
-                <input className="form-input edit-input" value={editForm.skills}
-                  onChange={e => setEditForm(f => ({ ...f, skills: e.target.value }))} placeholder="Skills (comma separated)" />
-                <div className="edit-actions">
-                  <button className="btn-save" onClick={handleSaveProfile} disabled={saving}>
-                    {saving ? 'Saving…' : 'Save Changes'}
-                  </button>
-                  <button className="btn-cancel" onClick={() => setEditing(false)}>Cancel</button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="profile-name-row">
-                  <h2 className="profile-name">{user.name}</h2>
-                  <span className="impact-badge">{level}</span>
-                </div>
-                <p className="profile-email">{user.email}</p>
-                <div className="profile-skills">
-                  {skills.map(s => <SkillBadge key={s} skill={s} matched />)}
-                </div>
-                <button className="btn-edit-profile" onClick={() => setEditing(true)}>Edit Profile</button>
-              </>
-            )}
+            <div className="profile-name-row">
+              <h2 className="profile-name">{user.name}</h2>
+              <span className="impact-badge">{level}</span>
+            </div>
+            <p className="profile-email">{user.email}</p>
+            {user.phone && <p className="profile-detail">📞 {user.phone}</p>}
+            {user.address && <p className="profile-detail">📍 {user.address}</p>}
+            <div className="profile-skills">
+              {skills.map(s => <SkillBadge key={s} skill={s} matched />)}
+              {skills.length === 0 && <span className="profile-no-skills">No skills added yet</span>}
+            </div>
           </div>
+          <button className="btn-settings" onClick={() => setShowSettings(true)} title="Edit Profile">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
         </div>
         <div className="profile-stats">
           <div className="stat">
@@ -153,7 +110,14 @@ export default function Dashboard({ user, onUpdateUser, onNotify }) {
         )}
       </section>
 
-      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {showSettings && (
+        <SettingsModal
+          user={user}
+          onUpdateUser={onUpdateUser}
+          onClose={() => setShowSettings(false)}
+          onNotify={onNotify}
+        />
+      )}
     </div>
   )
 }

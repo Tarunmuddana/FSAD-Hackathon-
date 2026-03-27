@@ -40,6 +40,8 @@ public class VolunteerController {
                     volunteer.setName(volunteerDetails.getName());
                     volunteer.setSkills(volunteerDetails.getSkills());
                     volunteer.setHoursLogged(volunteerDetails.getHoursLogged());
+                    volunteer.setPhone(volunteerDetails.getPhone());
+                    volunteer.setAddress(volunteerDetails.getAddress());
                     return ResponseEntity.ok(volunteerRepository.save(volunteer));
                 })
                 .orElse(ResponseEntity.notFound().build());

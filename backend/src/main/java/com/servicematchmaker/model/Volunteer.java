@@ -22,6 +22,10 @@ public class Volunteer {
 
     private String password;
 
+    private String phone;
+
+    private String address;
+
     public Volunteer() {
     }
 
@@ -31,51 +35,27 @@ public class Volunteer {
         this.hoursLogged = hoursLogged;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getSkills() { return skills; }
+    public void setSkills(String skills) { this.skills = skills; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public double getHoursLogged() { return hoursLogged; }
+    public void setHoursLogged(double hoursLogged) { this.hoursLogged = hoursLogged; }
 
-    public String getSkills() {
-        return skills;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public double getHoursLogged() {
-        return hoursLogged;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public void setHoursLogged(double hoursLogged) {
-        this.hoursLogged = hoursLogged;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 }

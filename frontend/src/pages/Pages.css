@@ -376,6 +376,12 @@
   margin-top: 2px;
 }
 
+.profile-detail {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
 .profile-skills {
   display: flex;
   flex-wrap: wrap;
@@ -383,32 +389,32 @@
   margin-top: 12px;
 }
 
-.btn-edit-profile {
-  margin-top: 12px;
-  padding: 6px 16px;
-  border-radius: var(--radius-pill);
-  background: none;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
+.profile-no-skills {
   font-size: 0.78rem;
-  font-weight: 600;
-  transition: all 0.2s;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
-.btn-edit-profile:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.edit-fields {
+.btn-settings {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: none;
+  color: var(--text-muted);
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
-.edit-input { max-width: 320px; }
-
-.edit-actions { display: flex; gap: 10px; }
+.btn-settings:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
 
 .btn-save {
   padding: 8px 20px;
@@ -727,6 +733,31 @@
 .my-event-badge.upcoming {
   background: var(--accent-dim);
   color: var(--accent);
+}
+
+.my-event-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-event-chat {
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-event-chat:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
 .my-event-badge.completed {
