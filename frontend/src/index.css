@@ -1,0 +1,112 @@
+/* ═══════════════════════════════════════════════
+   Service Matchmaker — Light Design System
+   Inspired by antigravity.google clean white UI
+   ═══════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Core palette — clean white */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafbfc;
+  --bg-input: #f1f3f5;
+
+  /* Borders */
+  --border-subtle: #e8eaed;
+  --border-focus: #dadce0;
+
+  /* Text — Google-style dark ink */
+  --text-primary: #202124;
+  --text-secondary: #5f6368;
+  --text-muted: #9aa0a6;
+
+  /* Accent — Google Blue */
+  --accent: #1a73e8;
+  --accent-hover: #1765cc;
+  --accent-dim: rgba(26, 115, 232, 0.08);
+
+  /* Score colors */
+  --score-high: #1e8e3e;
+  --score-mid: #f9ab00;
+  --score-low: #d93025;
+  --score-high-bg: rgba(30, 142, 62, 0.08);
+  --score-mid-bg: rgba(249, 171, 0, 0.08);
+  --score-low-bg: rgba(217, 48, 37, 0.08);
+
+  /* Status */
+  --critical: #d93025;
+  --critical-bg: rgba(217, 48, 37, 0.06);
+  --success: #1e8e3e;
+  --success-bg: rgba(30, 142, 62, 0.06);
+
+  /* Layout */
+  --radius: 16px;
+  --radius-sm: 12px;
+  --radius-pill: 100px;
+  --max-width: 1120px;
+  --nav-height: 64px;
+
+  /* Font */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(60,64,67,0.08);
+  --shadow-md: 0 2px 8px rgba(60,64,67,0.1);
+  --shadow-lg: 0 8px 24px rgba(60,64,67,0.12);
+  --shadow-card: 0 1px 2px rgba(60,64,67,0.06), 0 1px 3px rgba(60,64,67,0.1);
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font); }
+input, textarea, select { font-family: var(--font); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 3px; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.fade-up { animation: fadeUp 0.5s var(--ease) both; }
+.fade-up-delay-1 { animation-delay: 0.08s; }
+.fade-up-delay-2 { animation-delay: 0.16s; }
+.fade-up-delay-3 { animation-delay: 0.24s; }
+
+.scale-in { animation: scaleIn 0.4s var(--ease) both; }

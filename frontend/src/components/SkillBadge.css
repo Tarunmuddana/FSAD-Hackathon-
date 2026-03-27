@@ -1,0 +1,17 @@
+.skill-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s var(--ease);
+}
+
+.skill-badge.matched {
+  background: var(--score-high-bg);
+  color: var(--score-high);
+  border-color: rgba(30, 142, 62, 0.2);
+}
