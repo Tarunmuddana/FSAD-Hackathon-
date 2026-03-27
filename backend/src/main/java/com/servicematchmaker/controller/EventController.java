@@ -64,4 +64,9 @@ public class EventController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/organized-by/{volunteerId}")
+    public List<Event> getEventsOrganizedBy(@PathVariable Long volunteerId) {
+        return eventRepository.findByCreatedBy(volunteerId);
+    }
 }

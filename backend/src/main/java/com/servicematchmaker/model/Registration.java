@@ -18,12 +18,26 @@ public class Registration {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    @Column(nullable = false)
+    private String status = "PENDING";
+
+    @Column(length = 1000)
+    private String applicationNote;
+
     public Registration() {
     }
 
     public Registration(Volunteer volunteer, Event event) {
         this.volunteer = volunteer;
         this.event = event;
+        this.status = "PENDING";
+    }
+
+    public Registration(Volunteer volunteer, Event event, String applicationNote) {
+        this.volunteer = volunteer;
+        this.event = event;
+        this.status = "PENDING";
+        this.applicationNote = applicationNote;
     }
 
     public Long getId() {
@@ -48,5 +62,21 @@ public class Registration {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getApplicationNote() {
+        return applicationNote;
+    }
+
+    public void setApplicationNote(String applicationNote) {
+        this.applicationNote = applicationNote;
     }
 }

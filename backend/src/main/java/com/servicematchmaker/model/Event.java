@@ -39,6 +39,9 @@ public class Event {
     @Column(name = "status")
     private String status = "UPCOMING";
 
+    @Column(name = "created_by")
+    private Long createdBy;
+
     public Event() {
     }
 
@@ -96,4 +99,7 @@ public class Event {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Long getCreatedBy() { return createdBy; }
+    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
 }

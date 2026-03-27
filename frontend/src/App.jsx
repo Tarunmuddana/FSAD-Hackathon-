@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import DiscoveryFeed from './pages/DiscoveryFeed'
 import Dashboard from './pages/Dashboard'
 import AdminPanel from './pages/AdminPanel'
+import ManageCandidates from './pages/ManageCandidates'
 import MyEvents from './pages/MyEvents'
 import Chat from './pages/Chat'
 import Login from './pages/Login'
@@ -68,6 +69,7 @@ export default function App() {
         <Route path="/discover" element={<DiscoveryFeed user={user} onNotify={addNotification} />} />
         <Route path="/dashboard" element={<Dashboard user={user} onUpdateUser={handleUpdateUser} onNotify={addNotification} />} />
         <Route path="/organize" element={<AdminPanel user={user} onNotify={addNotification} />} />
+        <Route path="/manage-candidates" element={<ManageCandidates user={user} onNotify={addNotification} />} />
         <Route path="/my-events" element={<MyEvents user={user} />} />
         <Route path="/chat" element={<Chat user={user} />} />
         <Route path="*" element={<Navigate to="/discover" replace />} />

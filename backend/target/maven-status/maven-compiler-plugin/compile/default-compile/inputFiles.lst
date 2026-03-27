@@ -2,6 +2,7 @@ D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD H
 D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\controller\ActionController.java
 D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\repository\RegistrationRepository.java
 D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\dto\LoginRequestDTO.java
+D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\dto\RegistrationDTO.java
 D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\ServiceMatchmakerApplication.java
 D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\controller\ChatController.java
 D:\KLH\VAULTS SENSITIVE\2-2\S 24SDCS02-Full Stack Application Development\FSAD Hackathon\backend\src\main\java\com\servicematchmaker\repository\EventRepository.java

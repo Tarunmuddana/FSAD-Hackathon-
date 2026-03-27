@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getEvents, createEvent, deleteEvent, completeEvent } from '../services/api'
+import { getEvents, createEvent, deleteEvent, completeEvent, updateEvent } from '../services/api'
 import Toast from '../components/Toast'
 import './Pages.css'
 
@@ -8,6 +8,9 @@ export default function AdminPanel({ user, onNotify }) {
   const [form, setForm] = useState({ title: '', description: '', location: '', eventDate: '', eventTime: '', requiredSkill: '', requiredVolunteers: '', duration: '' })
   const [loading, setLoading] = useState(true)
   const [toast, setToast] = useState(null)
+  
+  // Edit State
+  const [editingEvent, setEditingEvent] = useState(null)
 
   useEffect(() => {
     getEvents()
@@ -34,12 +37,30 @@ export default function AdminPanel({ user, onNotify }) {
         requiredVolunteers: parseInt(form.requiredVolunteers) || 10,
         duration: parseFloat(form.duration) || 4,
         currentVolunteers: 0,
-        status: "UPCOMING"
+        status: "UPCOMING",
+        createdBy: user.id
       })
       setEvents(prev => [newEvent, ...prev])
       setForm({ title: '', description: '', location: '', eventDate: '', eventTime: '', requiredSkill: '', requiredVolunteers: '', duration: '' })
       showToast('Event created successfully!')
       onNotify?.('New event "' + newEvent.title + '" has been created!', 'success')
+    } catch (err) {
+      showToast(err.message, 'error')
+    }
+  }
+
+  const handleUpdate = async (e) => {
+    e.preventDefault()
+    if (!editingEvent.title) return
+    try {
+      const updated = await updateEvent(editingEvent.id, {
+        ...editingEvent,
+        requiredVolunteers: parseInt(editingEvent.requiredVolunteers) || 10,
+        duration: parseFloat(editingEvent.duration) || 4
+      })
+      setEvents(prev => prev.map(ev => ev.id === editingEvent.id ? updated : ev))
+      setEditingEvent(null)
+      showToast('Event updated successfully!')
     } catch (err) {
       showToast(err.message, 'error')
     }
@@ -67,6 +88,10 @@ export default function AdminPanel({ user, onNotify }) {
     }
   }
 
+  // Filter to only show events created by this user, or all events if no createdBy tracking existed
+  // But for this feature, let's show all events in the list for admin purposes, 
+  // or maybe just events they organized if we strictly want that.
+  // The backend already returns all events on GET /events.
   const upcoming = events.filter(e => e.status !== 'COMPLETED')
   const completed = events.filter(e => e.status === 'COMPLETED')
 
@@ -169,6 +194,7 @@ export default function AdminPanel({ user, onNotify }) {
                 </div>
                 <div className="admin-event-actions">
                   <span className="volunteer-count">{event.currentVolunteers}/{event.requiredVolunteers} joined</span>
+                  <button className="btn-action edit" onClick={() => setEditingEvent(event)}>✎ Edit</button>
                   <button className="btn-action complete" onClick={() => handleComplete(event.id)}>✓ Complete</button>
                   <button className="btn-action delete" onClick={() => handleDelete(event.id)}>Delete</button>
                 </div>
@@ -200,6 +226,75 @@ export default function AdminPanel({ user, onNotify }) {
             ))}
           </div>
         </section>
+      )}
+
+      {/* Edit Modal */}
+      {editingEvent && (
+        <div className="modal-backdrop" onClick={() => setEditingEvent(null)}>
+          <div className="modal-content profile-modal fade-up" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setEditingEvent(null)}>✕</button>
+            <div className="form-header">
+              <h2 className="form-heading">Edit Event</h2>
+            </div>
+            
+            <form onSubmit={handleUpdate} className="admin-form">
+              <div className="input-group">
+                <label className="input-label">Event Name *</label>
+                <input className="form-input" value={editingEvent.title}
+                  onChange={e => setEditingEvent(f => ({ ...f, title: e.target.value }))} required />
+              </div>
+
+              <div className="input-group">
+                <label className="input-label">Description</label>
+                <textarea className="form-input form-textarea"
+                  value={editingEvent.description || ''} onChange={e => setEditingEvent(f => ({ ...f, description: e.target.value }))} rows={3} />
+              </div>
+
+              <div className="form-row">
+                <div className="input-group">
+                  <label className="input-label">Location</label>
+                  <input className="form-input" value={editingEvent.location || ''}
+                    onChange={e => setEditingEvent(f => ({ ...f, location: e.target.value }))} />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Required Skill</label>
+                  <input className="form-input" value={editingEvent.requiredSkill || ''}
+                    onChange={e => setEditingEvent(f => ({ ...f, requiredSkill: e.target.value }))} />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="input-group">
+                  <label className="input-label">Date</label>
+                  <input className="form-input" type="date" value={editingEvent.eventDate || ''}
+                    onChange={e => setEditingEvent(f => ({ ...f, eventDate: e.target.value }))} />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Time</label>
+                  <input className="form-input" type="time" value={editingEvent.eventTime || ''}
+                    onChange={e => setEditingEvent(f => ({ ...f, eventTime: e.target.value }))} />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="input-group">
+                  <label className="input-label">Volunteers Needed</label>
+                  <input className="form-input" type="number" min="1" value={editingEvent.requiredVolunteers}
+                    onChange={e => setEditingEvent(f => ({ ...f, requiredVolunteers: e.target.value }))} />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Duration (hours)</label>
+                  <input className="form-input" type="number" min="1" value={editingEvent.duration}
+                    onChange={e => setEditingEvent(f => ({ ...f, duration: e.target.value }))} />
+                </div>
+              </div>
+
+              <div className="modal-footer" style={{ marginTop: '20px' }}>
+                <button type="submit" className="btn-create">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}

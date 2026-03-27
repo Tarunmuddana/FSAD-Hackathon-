@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getMyEvents } from '../services/api'
+import { getMyEvents, unregisterFromEvent } from '../services/api'
+import Toast from '../components/Toast'
 import './Pages.css'
 
 export default function MyEvents({ user }) {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
+  const [toast, setToast] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -14,6 +16,22 @@ export default function MyEvents({ user }) {
       .then(data => { setEvents(data); setLoading(false) })
       .catch(() => setLoading(false))
   }, [user])
+
+  const showToast = (msg, type = 'success') => {
+    setToast({ message: msg, type })
+    setTimeout(() => setToast(null), 3500)
+  }
+
+  const handleUnregister = async (eventId) => {
+    if (!confirm("Are you sure you want to unregister from this event?")) return
+    try {
+      await unregisterFromEvent(user.id, eventId)
+      setEvents(prev => prev.filter(e => e.id !== eventId))
+      showToast("Successfully unregistered from the event.")
+    } catch (err) {
+      showToast(err.message, 'error')
+    }
+  }
 
   if (!user) {
     return (
@@ -67,6 +85,9 @@ export default function MyEvents({ user }) {
                       <button className="btn-event-chat" onClick={() => navigate('/chat')} title="Open group chat">
                         💬 Chat
                       </button>
+                      <button className="btn-action delete" onClick={() => handleUnregister(event.id)}>
+                        Unregister
+                      </button>
                       <div className="my-event-badge upcoming">Upcoming</div>
                     </div>
                   </div>
@@ -98,6 +119,8 @@ export default function MyEvents({ user }) {
           )}
         </>
       )}
+
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   )
 }

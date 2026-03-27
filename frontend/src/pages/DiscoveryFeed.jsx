@@ -32,16 +32,29 @@ export default function DiscoveryFeed({ user, onNotify }) {
     setTimeout(() => setToast(null), 3500)
   }
 
-  const handleRegister = async (eventId) => {
+  const [registeringEvent, setRegisteringEvent] = useState(null)
+  const [appNote, setAppNote] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleRegisterClick = (eventId) => {
     if (!user) { showToast('Please sign in to register for events.', 'error'); return }
+    setRegisteringEvent(eventId)
+    setAppNote('')
+  }
+
+  const submitRegistration = async () => {
+    if (!registeringEvent || !user) return
+    setIsSubmitting(true)
     try {
-      await registerForEvent(user.id, eventId)
+      await registerForEvent(user.id, registeringEvent, appNote)
       showToast('You\'re registered! See you there 🎉')
       onNotify?.('You registered for a new event!', 'success')
-      // Refresh data to update volunteer counts
+      setRegisteringEvent(null)
       await loadData()
     } catch (err) {
       showToast(err.message || 'Registration failed.', 'error')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -76,9 +89,43 @@ export default function DiscoveryFeed({ user, onNotify }) {
               event={m.event}
               score={m.compatibilityScore}
               userSkills={user?.skills}
-              onRegister={handleRegister}
+              onRegister={handleRegisterClick}
             />
           ))}
+        </div>
+      )}
+
+      {/* Registration Modal */}
+      {registeringEvent && (
+        <div className="modal-backdrop" onClick={() => !isSubmitting && setRegisteringEvent(null)}>
+          <div className="modal-content fade-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+            <button className="modal-close" onClick={() => !isSubmitting && setRegisteringEvent(null)}>✕</button>
+            <h2 className="form-heading">Complete Registration</h2>
+            <p className="form-subheading" style={{ marginBottom: '20px' }}>
+              Add an optional note for the event organizer.
+            </p>
+            <div className="input-group">
+              <label className="input-label">Application Note</label>
+              <textarea 
+                className="form-input form-textarea" 
+                rows="4"
+                placeholder="Examples: 'I have 3 years of matching experience' or 'I will need to leave 30m early'"
+                value={appNote}
+                onChange={e => setAppNote(e.target.value)}
+                disabled={isSubmitting}
+              />
+            </div>
+            <div className="modal-footer" style={{ marginTop: '24px' }}>
+              <button 
+                className="btn-create" 
+                onClick={submitRegistration}
+                disabled={isSubmitting}
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                {isSubmitting ? 'Registering...' : 'Confirm Registration'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

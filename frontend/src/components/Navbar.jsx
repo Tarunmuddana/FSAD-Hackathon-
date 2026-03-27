@@ -48,6 +48,9 @@ export default function Navbar({ user, onLogout, notifications = [], onClearNoti
           <NavLink to="/organize" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
             Organize
           </NavLink>
+          <NavLink to="/manage-candidates" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            Candidates
+          </NavLink>
           <NavLink to="/chat" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
             Messages
           </NavLink>
